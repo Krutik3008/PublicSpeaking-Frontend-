@@ -13,9 +13,18 @@ export const AuthProvider = ({ children }) => {
 
     const loadUser = async () => {
         try {
+            // Check if token exists in localStorage
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setLoading(false);
+                return;
+            }
+
             const response = await authAPI.getProfile();
             setUser(response.data.data);
         } catch (error) {
+            // Token is invalid or expired, clear it
+            localStorage.removeItem('token');
             setUser(null);
         } finally {
             setLoading(false);
@@ -24,13 +33,27 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         const response = await authAPI.login({ email, password });
-        setUser(response.data.data);
+        const userData = response.data.data;
+
+        // Store token in localStorage
+        if (userData.token) {
+            localStorage.setItem('token', userData.token);
+        }
+
+        setUser(userData);
         return response.data;
     };
 
     const register = async (name, email, password) => {
         const response = await authAPI.register({ name, email, password });
-        setUser(response.data.data);
+        const userData = response.data.data;
+
+        // Store token in localStorage
+        if (userData.token) {
+            localStorage.setItem('token', userData.token);
+        }
+
+        setUser(userData);
         return response.data;
     };
 
@@ -40,6 +63,8 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.error('Logout error:', error);
         }
+        // Clear token from localStorage
+        localStorage.removeItem('token');
         setUser(null);
     };
 
@@ -68,3 +93,4 @@ export const useAuth = () => {
 };
 
 export default AuthContext;
+
