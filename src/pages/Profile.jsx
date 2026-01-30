@@ -57,29 +57,79 @@ const Profile = () => {
     }
 
     return (
-        <div style={{ paddingTop: '100px', minHeight: '100vh' }}>
+        <div style={{ paddingTop: '100px', paddingBottom: '20px', minHeight: '100vh' }}>
             <div className="container">
                 {/* Profile Header */}
+                {/* Profile Header */}
                 <div style={{
-                    background: 'var(--gradient-primary)',
-                    borderRadius: 'var(--radius-2xl)',
-                    padding: 'var(--space-10)',
-                    color: 'white',
-                    marginBottom: 'var(--space-8)'
+                    background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '2rem',
+                    padding: '2.5rem',
+                    marginBottom: '2rem',
+                    textAlign: 'center',
+                    position: 'relative',
+                    overflow: 'hidden'
                 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                        <div>
-                            <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>👋</div>
-                            <h1 style={{ fontSize: 'var(--font-size-3xl)', marginBottom: '0.5rem' }}>
-                                Hello, {user?.name}!
-                            </h1>
-                            <p style={{ opacity: 0.9 }}>{user?.email}</p>
+                    <div style={{ position: 'relative', zIndex: 1 }}>
+                        <div style={{
+                            fontSize: '3rem',
+                            marginBottom: '1rem',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '80px',
+                            height: '80px',
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            borderRadius: '50%',
+                            border: '1px solid rgba(255, 255, 255, 0.1)'
+                        }}>
+                            👋
                         </div>
+                        <h1 style={{
+                            fontSize: '2rem',
+                            fontWeight: '800',
+                            marginBottom: '0.5rem',
+                            background: 'linear-gradient(to right, #fff, #a5b4fc)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                        }}>
+                            Hello, {user?.name}!
+                        </h1>
+                        <p style={{
+                            color: 'var(--text-secondary)',
+                            fontSize: '1.1rem',
+                            marginBottom: '1.5rem'
+                        }}>
+                            {user?.email}
+                        </p>
                         <button
-                            className="btn btn-secondary"
                             onClick={handleLogout}
+                            style={{
+                                background: 'rgba(239, 68, 68, 0.15)',
+                                color: '#f87171',
+                                border: '1px solid rgba(239, 68, 68, 0.3)',
+                                padding: '0.75rem 2rem',
+                                borderRadius: '1rem',
+                                fontSize: '1rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                            }}
+                            onMouseOver={(e) => {
+                                e.target.style.background = 'rgba(239, 68, 68, 0.25)';
+                                e.target.style.transform = 'translateY(-2px)';
+                            }}
+                            onMouseOut={(e) => {
+                                e.target.style.background = 'rgba(239, 68, 68, 0.15)';
+                                e.target.style.transform = 'none';
+                            }}
                         >
-                            Logout
+                            Log Out
                         </button>
                     </div>
                 </div>
@@ -95,9 +145,9 @@ const Profile = () => {
                         <div style={{ textAlign: 'center' }}>
                             <div style={{ fontSize: '3rem' }}>📝</div>
                             <div style={{ fontSize: 'var(--font-size-3xl)', fontWeight: '700', color: 'var(--primary-600)' }}>
-                                {savedScripts.length}
+                                Crafting
                             </div>
-                            <div style={{ color: 'var(--text-secondary)' }}>Saved Scripts</div>
+                            <div style={{ color: 'var(--text-secondary)' }}>Your Story</div>
                         </div>
                     </Card>
                     <Card>
@@ -120,89 +170,39 @@ const Profile = () => {
                     </Card>
                 </div>
 
-                {/* Saved Scripts */}
-                <div className="section-header" style={{ marginBottom: 'var(--space-6)' }}>
-                    <h2 className="section-title">Your Saved Scripts</h2>
-                    <p className="section-subtitle">
-                        Quick access to your favorite scripts for speaking up
-                    </p>
-                </div>
 
-                {loading ? (
-                    <Loading />
-                ) : savedScripts.length === 0 ? (
-                    <div className="empty-state">
-                        <div className="empty-state-icon">📝</div>
-                        <h3 className="empty-state-title">No saved scripts yet</h3>
-                        <p>Browse scenarios and save scripts you find helpful</p>
-                        <button
-                            className="btn btn-primary"
-                            style={{ marginTop: '1rem' }}
-                            onClick={() => navigate('/scenarios')}
-                        >
-                            Browse Scenarios
-                        </button>
-                    </div>
-                ) : (
-                    <div className="scenarios-grid">
-                        {savedScripts.map((script) => (
-                            <Card key={script._id}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
-                                    <span className="card-badge">{script.tone} tone</span>
-                                    <button
-                                        className="btn btn-ghost btn-sm"
-                                        onClick={() => handleUnsave(script._id)}
-                                        title="Remove from saved"
-                                    >
-                                        ❌
-                                    </button>
-                                </div>
-                                <h3 className="card-title" style={{ fontSize: '1rem' }}>
-                                    {script.scenario?.title || 'Custom Script'}
-                                </h3>
-                                <p className="card-description" style={{ marginTop: '0.5rem' }}>
-                                    "{script.openingLine}"
-                                </p>
-                                <button
-                                    className="btn btn-secondary btn-sm"
-                                    style={{ marginTop: '1rem', width: '100%' }}
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(`${script.openingLine} ${script.bodyScript} ${script.closingLine}`);
-                                        alert('Script copied!');
-                                    }}
-                                >
-                                    📋 Copy Script
-                                </button>
-                            </Card>
-                        ))}
-                    </div>
-                )}
 
                 {/* Quick Actions */}
                 <div style={{
                     marginTop: 'var(--space-12)',
+                    marginBottom: 'var(--space-12)',
                     padding: 'var(--space-8)',
-                    background: 'var(--bg-light)',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: 'var(--radius-2xl)',
                     textAlign: 'center'
                 }}>
                     <h3 style={{ marginBottom: '1rem' }}>Need help right now?</h3>
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button
-                            className="btn btn-primary"
+                            className="btn btn-secondary"
                             onClick={() => navigate('/generate')}
+                            style={{ minWidth: '200px' }}
                         >
                             ⚡ Quick Help Generator
                         </button>
                         <button
                             className="btn btn-secondary"
                             onClick={() => navigate('/scenarios')}
+                            style={{ minWidth: '200px' }}
                         >
                             📚 Browse Scenarios
                         </button>
                         <button
                             className="btn btn-secondary"
                             onClick={() => navigate('/tips')}
+                            style={{ minWidth: '200px' }}
                         >
                             💡 Read Tips
                         </button>

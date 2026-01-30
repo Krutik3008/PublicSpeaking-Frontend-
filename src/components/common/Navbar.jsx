@@ -129,12 +129,17 @@ const Navbar = () => {
                             }}>
                             {isAuthenticated ? (
                                 <>
-                                    <div className="mobile-user-greeting">
+                                    <Link
+                                        to="/profile"
+                                        onClick={() => setIsOpen(false)}
+                                        className="mobile-user-greeting"
+                                        style={{ textDecoration: 'none', cursor: 'pointer' }}
+                                    >
                                         <div className="user-avatar">
                                             {user?.name?.charAt(0)?.toUpperCase() || 'U'}
                                         </div>
                                         <span>Hi, {user?.name?.split(' ')[0] || 'User'}</span>
-                                    </div>
+                                    </Link>
                                     <button
                                         onClick={() => { logout(); setIsOpen(false); }}
                                         style={{
