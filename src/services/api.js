@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://public-speaking-backend.vercel.app/api';
+// Use local backend in development, Vercel backend in production
+const API_URL = import.meta.env.DEV
+    ? 'http://localhost:5000/api'
+    : (import.meta.env.VITE_API_URL || 'https://public-speaking-backend.vercel.app/api');
 
 // Create axios instance
 const api = axios.create({
