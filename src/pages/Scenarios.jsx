@@ -297,8 +297,14 @@ const Scenarios = () => {
                             {selectedScenario.description}
                         </p>
 
-                        <div style={{ marginBottom: '1.5rem', padding: '1rem', background: 'var(--primary-50)', borderRadius: 'var(--radius-lg)' }}>
-                            <strong>Why speaking up feels hard:</strong>
+                        <div style={{
+                            marginBottom: '1.5rem',
+                            padding: '1rem',
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            borderRadius: 'var(--radius-lg)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)'
+                        }}>
+                            <strong style={{ color: 'var(--primary-400)' }}>Why speaking up feels hard:</strong>
                             <p style={{ margin: '0.5rem 0 0', color: 'var(--text-secondary)' }}>
                                 {selectedScenario.emotionalContext}
                             </p>
