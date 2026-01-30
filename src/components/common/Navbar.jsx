@@ -92,19 +92,114 @@ const Navbar = () => {
                     {navLinks.map((link, index) => (
                         <motion.div
                             key={link.path}
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.05 }}
                         >
                             <Link
                                 to={link.path}
                                 className={`navbar-link ${isActive(link.path) ? 'active' : ''}`}
                                 onClick={() => setIsOpen(false)}
+                                style={{
+                                    display: 'block',
+                                    padding: '0.75rem 1rem',
+                                    borderRadius: '0.75rem',
+                                    background: isActive(link.path) ? 'rgba(99, 102, 241, 0.2)' : 'transparent'
+                                }}
                             >
                                 {link.label}
                             </Link>
                         </motion.div>
                     ))}
+
+                    {/* Mobile-only auth links */}
+                    {isOpen && (
+                        <motion.div
+                            className="mobile-auth-links"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.3 }}
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '0.75rem',
+                                paddingTop: '1.25rem',
+                                marginTop: '1rem',
+                                borderTop: '1px solid rgba(255, 255, 255, 0.15)'
+                            }}>
+                            {isAuthenticated ? (
+                                <>
+                                    <Link
+                                        to="/profile"
+                                        onClick={() => setIsOpen(false)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            padding: '0.75rem 1rem',
+                                            borderRadius: '0.75rem',
+                                            background: 'rgba(255, 255, 255, 0.05)',
+                                            color: 'white',
+                                            fontWeight: '500'
+                                        }}>
+                                        <User size={20} /> Profile
+                                    </Link>
+                                    <button
+                                        onClick={() => { logout(); setIsOpen(false); }}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            background: 'rgba(239, 68, 68, 0.15)',
+                                            border: '1px solid rgba(239, 68, 68, 0.3)',
+                                            padding: '0.75rem 1rem',
+                                            borderRadius: '0.75rem',
+                                            cursor: 'pointer',
+                                            color: '#f87171',
+                                            fontWeight: '500',
+                                            width: '100%',
+                                            fontSize: '1rem'
+                                        }}>
+                                        <LogOut size={20} /> Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link
+                                        to="/login"
+                                        onClick={() => setIsOpen(false)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.75rem',
+                                            padding: '0.75rem 1rem',
+                                            borderRadius: '0.75rem',
+                                            background: 'rgba(255, 255, 255, 0.05)',
+                                            color: 'white',
+                                            fontWeight: '500'
+                                        }}>
+                                        <LogIn size={20} /> Login
+                                    </Link>
+                                    <Link
+                                        to="/register"
+                                        onClick={() => setIsOpen(false)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '0.75rem',
+                                            padding: '0.75rem 1rem',
+                                            borderRadius: '0.75rem',
+                                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                            color: 'white',
+                                            fontWeight: '600'
+                                        }}>
+                                        <UserPlus size={20} /> Sign Up
+                                    </Link>
+                                </>
+                            )}
+                        </motion.div>
+                    )}
                 </div>
 
                 <div className="navbar-actions">

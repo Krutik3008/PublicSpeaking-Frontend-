@@ -141,13 +141,13 @@ const Tools = () => {
                 </motion.div>
 
                 {/* Animated Counters */}
-                <div style={{
+                <div className="tools-counters" style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                    gap: '1.5rem',
-                    marginBottom: '4rem',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(45%, 150px), 1fr))',
+                    gap: '1rem',
+                    marginBottom: '3rem',
                     maxWidth: '1000px',
-                    margin: '0 auto 4rem auto'
+                    margin: '0 auto 3rem auto'
                 }}>
                     <Counter value={totalTools} label="Power Tools" icon={Wrench} />
                     <Counter
@@ -160,9 +160,9 @@ const Tools = () => {
                 </div>
 
                 {/* Tools Grid */}
-                <div style={{
+                <div className="tools-grid" style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))',
                     gap: '2rem',
                     marginBottom: '4rem'
                 }}>

@@ -143,10 +143,13 @@ const Home = () => {
                         {/* Stats */}
                         <motion.div
                             variants={itemVariants}
+                            className="hero-stats"
                             style={{
                                 display: 'flex',
-                                gap: '3rem',
-                                marginTop: '3rem'
+                                flexWrap: 'wrap',
+                                gap: '2rem',
+                                marginTop: '3rem',
+                                justifyContent: 'center'
                             }}
                         >
                             {[

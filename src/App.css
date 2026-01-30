@@ -86,15 +86,31 @@
 /* Mobile menu */
 .navbar-mobile-toggle {
     display: none;
-    padding: var(--space-2);
+    padding: var(--space-3);
     background: var(--bg-glass);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: var(--radius-lg);
     color: var(--text-primary);
-    font-size: 1.5rem;
+    font-size: 1.25rem;
+    min-width: 44px;
+    min-height: 44px;
+    margin-left: auto;
 }
 
 @media (max-width: 768px) {
+    .navbar-container {
+        padding: var(--space-3) var(--space-4);
+        gap: var(--space-3);
+    }
+
+    .navbar-logo {
+        font-size: var(--font-size-lg);
+    }
+
+    .navbar-logo-icon {
+        font-size: 1.25rem;
+    }
+
     .navbar-nav {
         display: none;
     }
@@ -103,6 +119,20 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        order: 3;
+    }
+
+    .navbar-actions {
+        display: none;
+    }
+
+    /* HELP NOW button on mobile */
+    .navbar-container>a[href="/emergency"] {
+        order: 2;
+        margin-left: auto;
+        margin-right: var(--space-2);
+        padding: var(--space-1) var(--space-3);
+        font-size: 0.7rem;
     }
 
     .navbar-nav.open {
@@ -112,11 +142,20 @@
         top: 100%;
         left: 0;
         right: 0;
-        background: rgba(10, 10, 15, 0.95);
+        background: rgba(10, 10, 15, 0.98);
         backdrop-filter: blur(20px);
         padding: var(--space-6);
         gap: var(--space-4);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .navbar-nav.open+.navbar-actions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        padding: var(--space-4) var(--space-6);
+        background: rgba(10, 10, 15, 0.98);
     }
 }
 
@@ -987,4 +1026,204 @@
     font-weight: 700;
     margin-bottom: var(--space-3);
     color: var(--text-primary);
+}
+
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 768px) {
+
+    /* Page top padding */
+    .script-generator,
+    [style*="paddingTop: '100px'"],
+    [style*="padding-top: 100px"] {
+        padding-top: 80px !important;
+    }
+
+    /* Glass components */
+    .glass {
+        padding: var(--space-5) !important;
+    }
+
+    /* Tools grid */
+    .tools-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem;
+    }
+
+    .tools-counters {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.75rem !important;
+    }
+
+    /* Script tips - full width on mobile */
+    .script-tips {
+        flex-direction: column;
+    }
+
+    .script-tip {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Navbar - hide HELP NOW text on mobile */
+    .navbar-container>a[href="/emergency"] {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.65rem;
+    }
+
+    /* Grids */
+    .scenarios-grid,
+    .tips-grid {
+        grid-template-columns: 1fr;
+        padding: 0 var(--space-4);
+        gap: var(--space-6);
+    }
+
+    .tone-options {
+        grid-template-columns: 1fr;
+    }
+
+    /* Cards */
+    .card {
+        padding: var(--space-6);
+    }
+
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+        margin-bottom: var(--space-4);
+    }
+
+    /* Section headers */
+    .section-header {
+        margin-bottom: var(--space-10);
+        padding: 0 var(--space-4);
+    }
+
+    .section-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    /* Quick help */
+    .quick-help {
+        padding: var(--space-10) 0;
+    }
+
+    .quick-help-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    .quick-help .btn {
+        padding: var(--space-4) var(--space-6);
+        font-size: var(--font-size-base);
+    }
+
+    /* Generator form */
+    .generator-form {
+        padding: var(--space-6);
+    }
+
+    .script-result {
+        padding: var(--space-6);
+    }
+
+    /* Auth pages */
+    .auth-page {
+        padding: var(--space-4);
+    }
+
+    .auth-card {
+        padding: var(--space-8);
+    }
+
+    .auth-title {
+        font-size: var(--font-size-2xl);
+    }
+
+    /* Modal */
+    .modal {
+        padding: var(--space-6);
+        margin: var(--space-4);
+        max-height: 90vh;
+    }
+
+    /* Tips categories */
+    .tips-categories {
+        gap: var(--space-2);
+        padding: 0 var(--space-4);
+    }
+
+    .category-btn {
+        padding: var(--space-2) var(--space-4);
+        font-size: var(--font-size-sm);
+    }
+
+    /* Hero visual (hide on very small screens) */
+    .hero-visual {
+        display: none;
+    }
+
+    /* Stats on home page - stack them */
+    .hero-content>div:last-child {
+        flex-direction: column;
+        gap: 1.5rem !important;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Extra small screens */
+    .btn-lg {
+        padding: var(--space-3) var(--space-5);
+        font-size: var(--font-size-base);
+    }
+
+    .hero-badge {
+        font-size: var(--font-size-xs);
+        padding: var(--space-1) var(--space-3);
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-actions>* {
+        width: 100%;
+    }
+
+    .hero-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Hero stats on small screens */
+    .hero-stats {
+        gap: 1.5rem !important;
+    }
+
+    .hero-stats>div>div:first-child {
+        font-size: 1.5rem !important;
+    }
+
+    .hero-stats>div>div:last-child {
+        font-size: 0.75rem !important;
+    }
+
+    /* Promise section badges */
+    .quick-help>.container>div:last-child {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+    }
+
+    /* Footer on extra small */
+    .footer {
+        padding: var(--space-10) 0 var(--space-6);
+    }
+
+    .footer-bottom {
+        padding-top: var(--space-6);
+        margin-top: var(--space-10);
+    }
 }
