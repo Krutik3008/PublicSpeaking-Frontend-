@@ -90,7 +90,7 @@ const Tools = () => {
                 toolsAPI.getAffirmations(),
                 toolsAPI.getScripts()
             ]);
-            
+
             setToolsStats({
                 totalPhrases: phrasesRes.data.count || 0,
                 totalAffirmations: affirmationsRes.data.count || 0,
@@ -150,10 +150,10 @@ const Tools = () => {
                     margin: '0 auto 4rem auto'
                 }}>
                     <Counter value={totalTools} label="Power Tools" icon={Wrench} />
-                    <Counter 
-                        value={totalPhrases > 0 ? `${totalPhrases}+` : '8+'} 
-                        label="Practice Phrases" 
-                        icon={Sparkles} 
+                    <Counter
+                        value={totalPhrases > 0 ? `${totalPhrases}+` : '8+'}
+                        label="Practice Phrases"
+                        icon={Sparkles}
                     />
                     <Counter value="2min" label="Calm Down Time" icon={Heart} />
                     <Counter value="100%" label="Confidence Boost" icon={Zap} />
@@ -218,7 +218,8 @@ const Tools = () => {
                         textAlign: 'center',
                         position: 'relative',
                         overflow: 'hidden',
-                        border: '1px solid rgba(255,255,255,0.1)'
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        marginBottom: '4rem'
                     }}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}

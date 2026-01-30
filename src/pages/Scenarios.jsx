@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 import { scenariosAPI, scriptsAPI } from '../services/api';
 import Card from '../components/common/Card';
 import Loading from '../components/common/Loading';
@@ -11,7 +12,10 @@ import {
     Zap,
     Copy,
     FileText,
-    ArrowRight
+    ArrowRight,
+    PlusCircle,
+    Lock,
+    Send
 } from '../components/common/IconMap';
 
 const Scenarios = () => {
@@ -23,8 +27,19 @@ const Scenarios = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedScenario, setSelectedScenario] = useState(null);
     const [scripts, setScripts] = useState([]);
+    // Add Scenario State
+    const [addModalOpen, setAddModalOpen] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [newScenario, setNewScenario] = useState({
+        title: '',
+        description: '',
+        category: 'general',
+        difficulty: 'medium',
+        emotionalContext: ''
+    });
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
     const { id } = useParams();
 
     useEffect(() => {
@@ -113,6 +128,36 @@ const Scenarios = () => {
         alert('Script copied to clipboard!');
     };
 
+    const handleAddClick = () => {
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
+        setAddModalOpen(true);
+    };
+
+    const handleCreateScenario = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        try {
+            await scenariosAPI.create(newScenario);
+            setAddModalOpen(false);
+            setNewScenario({
+                title: '',
+                description: '',
+                category: 'general',
+                difficulty: 'medium',
+                emotionalContext: ''
+            });
+            // Refresh list
+            fetchScenarios();
+        } catch (error) {
+            console.error('Error creating scenario:', error);
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
     const filteredScenarios = scenarios.filter(scenario =>
         scenario.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         scenario.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -144,6 +189,16 @@ const Scenarios = () => {
                     <p className="section-subtitle">
                         Browse common situations and get ready-to-use scripts for speaking up confidently
                     </p>
+                    <motion.button
+                        className="btn btn-primary"
+                        style={{ marginTop: '1rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                        onClick={handleAddClick}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        <PlusCircle size={18} />
+                        Share Your Scenario
+                    </motion.button>
                 </motion.div>
 
                 {/* Search */}
@@ -307,6 +362,104 @@ const Scenarios = () => {
                         </motion.button>
                     </div>
                 )}
+            </Modal>
+
+            {/* Add Scenario Modal */}
+            <Modal
+                isOpen={addModalOpen}
+                onClose={() => setAddModalOpen(false)}
+                title="Share a Solution Scenario"
+            >
+                <form onSubmit={handleCreateScenario}>
+                    <div className="form-group">
+                        <label className="form-label">Title</label>
+                        <input
+                            type="text"
+                            className="form-input"
+                            placeholder="e.g., Charged extra for sauce"
+                            value={newScenario.title}
+                            onChange={(e) => setNewScenario({ ...newScenario, title: e.target.value })}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Description</label>
+                        <textarea
+                            className="form-textarea"
+                            placeholder="Describe the situation..."
+                            value={newScenario.description}
+                            onChange={(e) => setNewScenario({ ...newScenario, description: e.target.value })}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-grid">
+                        <div className="form-group">
+                            <label className="form-label">Category</label>
+                            <select
+                                className="form-select"
+                                value={newScenario.category}
+                                onChange={(e) => setNewScenario({ ...newScenario, category: e.target.value })}
+                            >
+                                {categories.map(cat => (
+                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">Difficulty</label>
+                            <select
+                                className="form-select"
+                                value={newScenario.difficulty}
+                                onChange={(e) => setNewScenario({ ...newScenario, difficulty: e.target.value })}
+                            >
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="challenging">Challenging</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Emotional Context (Why it's hard)</label>
+                        <textarea
+                            className="form-textarea"
+                            placeholder="e.g., Fear of looking cheap..."
+                            value={newScenario.emotionalContext}
+                            onChange={(e) => setNewScenario({ ...newScenario, emotionalContext: e.target.value })}
+                            required
+                        />
+                    </div>
+
+                    <div style={{
+                        padding: '1rem',
+                        background: 'rgba(0, 0, 0, 0.2)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: 'var(--radius-lg)',
+                        marginBottom: '1rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem'
+                    }}>
+                        <Lock size={18} style={{ color: 'var(--primary-600)' }} />
+                        <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                            Your scenario will help others practice!
+                        </p>
+                    </div>
+
+                    <motion.button
+                        type="submit"
+                        className="btn btn-primary"
+                        style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                        disabled={submitting}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                    >
+                        <Send size={18} />
+                        {submitting ? 'Creating...' : 'Create Scenario'}
+                    </motion.button>
+                </form>
             </Modal>
         </div>
     );

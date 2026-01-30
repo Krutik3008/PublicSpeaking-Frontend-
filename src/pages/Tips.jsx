@@ -69,14 +69,14 @@ const Tips = () => {
             navigate('/login');
             return;
         }
-        
+
         try {
             const response = await tipsAPI.like(tipId);
             const { likes, hasLiked } = response.data.data;
-            
+
             setTips(tips.map(tip =>
-                tip._id === tipId ? { 
-                    ...tip, 
+                tip._id === tipId ? {
+                    ...tip,
                     likes: likes,
                     hasLiked: hasLiked
                 } : tip
@@ -92,7 +92,7 @@ const Tips = () => {
     const handleAddTip = async (e) => {
         e.preventDefault();
         if (!newTip.content.trim()) return;
-        
+
         if (!isAuthenticated) {
             navigate('/login');
             return;
@@ -228,9 +228,9 @@ const Tips = () => {
                                         onClick={() => handleLike(tip._id)}
                                         whileHover={{ scale: 1.1 }}
                                         whileTap={{ scale: 0.9 }}
-                                        style={{ 
-                                            display: 'flex', 
-                                            alignItems: 'center', 
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
                                             gap: '0.25rem',
                                             background: 'none',
                                             border: 'none',
@@ -239,9 +239,9 @@ const Tips = () => {
                                             transition: 'all 0.2s ease'
                                         }}
                                     >
-                                        <Heart 
-                                            size={16} 
-                                            fill={tip.hasLiked ? "#ef4444" : "none"} 
+                                        <Heart
+                                            size={16}
+                                            fill={tip.hasLiked ? "#ef4444" : "none"}
                                             color={tip.hasLiked ? "#ef4444" : "var(--text-secondary)"}
                                         />
                                         {tip.likes || 0}
@@ -292,7 +292,8 @@ const Tips = () => {
 
                     <div style={{
                         padding: '1rem',
-                        background: 'var(--primary-50)',
+                        background: 'rgba(0, 0, 0, 0.2)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
                         borderRadius: 'var(--radius-lg)',
                         marginBottom: '1rem',
                         display: 'flex',

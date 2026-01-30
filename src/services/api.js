@@ -25,7 +25,8 @@ export const scenariosAPI = {
     getById: (id) => api.get(`/scenarios/${id}`),
     getByCategory: (category) => api.get(`/scenarios/category/${category}`),
     search: (query) => api.get('/scenarios/search', { params: { q: query } }),
-    getCategories: () => api.get('/scenarios/categories')
+    getCategories: () => api.get('/scenarios/categories'),
+    create: (data) => api.post('/scenarios', data)
 };
 
 // Stories API

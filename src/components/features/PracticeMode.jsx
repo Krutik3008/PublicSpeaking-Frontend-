@@ -83,7 +83,16 @@ const PracticeMode = () => {
     const selectRandomScript = () => {
         if (scripts.length === 0) return;
         const random = scripts[Math.floor(Math.random() * scripts.length)];
-        setPracticeScript(random.text);
+
+        // Handle both simple text objects and structured script objects
+        let scriptText = random.text;
+
+        // If text is missing but we have structured parts, construct it
+        if (!scriptText && random.openingLine) {
+            scriptText = `${random.openingLine} ${random.bodyScript} ${random.closingLine}`;
+        }
+
+        setPracticeScript(scriptText || "No script text available.");
     };
 
     return (
@@ -210,11 +219,13 @@ const PracticeMode = () => {
                         </motion.div>
                         <div style={{
                             padding: 'var(--space-4)',
-                            background: 'var(--primary-50)',
+                            background: 'rgba(0, 0, 0, 0.2)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
                             borderRadius: 'var(--radius-lg)',
                             marginBottom: 'var(--space-4)',
                             fontSize: 'var(--font-size-lg)',
-                            lineHeight: '1.6'
+                            lineHeight: '1.6',
+                            color: 'white'
                         }}>
                             {practiceScript}
                         </div>

@@ -173,19 +173,19 @@ const SuccessStories = () => {
             navigate('/login');
             return;
         }
-        
+
         try {
             const response = await storiesAPI.like(storyId);
             const { likes, hasLiked, action } = response.data.data;
-            
+
             setStories(stories.map(story =>
-                story._id === storyId ? { 
-                    ...story, 
+                story._id === storyId ? {
+                    ...story,
                     likes: likes,
                     hasLiked: hasLiked
                 } : story
             ));
-            
+
             // Update stats based on action
             if (action === 'liked') {
                 setStats(prev => ({ ...prev, totalLikes: prev.totalLikes + 1 }));
@@ -202,12 +202,12 @@ const SuccessStories = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!isAuthenticated) {
             navigate('/login');
             return;
         }
-        
+
         setSubmitting(true);
 
         try {
@@ -240,7 +240,7 @@ const SuccessStories = () => {
     };
 
     return (
-        <div style={{ paddingTop: '100px', minHeight: '100vh' }}>
+        <div style={{ paddingTop: '100px', paddingBottom: '4rem', minHeight: '100vh' }}>
             <AnimatedBackground />
 
             <div className="container">
@@ -301,23 +301,23 @@ const SuccessStories = () => {
                     maxWidth: '1200px',
                     margin: '0 auto 4rem auto'
                 }}>
-                    <Counter 
-                        value={stats.totalStories} 
-                        label="Stories Shared" 
-                        icon={MessageCircle} 
-                        delay={0} 
+                    <Counter
+                        value={stats.totalStories}
+                        label="Stories Shared"
+                        icon={MessageCircle}
+                        delay={0}
                     />
-                    <Counter 
-                        value={stats.totalLikes} 
-                        label="Community Likes" 
-                        icon={Heart} 
-                        delay={0.1} 
+                    <Counter
+                        value={stats.totalLikes}
+                        label="Community Likes"
+                        icon={Heart}
+                        delay={0.1}
                     />
-                    <Counter 
-                        value={stats.empoweredPercentage > 0 ? `${stats.empoweredPercentage}%` : '0%'} 
-                        label="Felt Empowered" 
-                        icon={TrendingUp} 
-                        delay={0.2} 
+                    <Counter
+                        value={stats.empoweredPercentage > 0 ? `${stats.empoweredPercentage}%` : '0%'}
+                        label="Felt Empowered"
+                        icon={TrendingUp}
+                        delay={0.2}
                     />
                 </div>
 
@@ -479,9 +479,9 @@ const SuccessStories = () => {
                                                     transition: 'all 0.2s ease'
                                                 }}
                                             >
-                                                <Heart 
-                                                    size={16} 
-                                                    fill={story.hasLiked ? "#ef4444" : "none"} 
+                                                <Heart
+                                                    size={16}
+                                                    fill={story.hasLiked ? "#ef4444" : "none"}
                                                     color={story.hasLiked ? "#ef4444" : "var(--text-secondary)"}
                                                 />
                                                 <span>{story.likes || 0}</span>

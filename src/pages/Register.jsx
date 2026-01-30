@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { Eye, EyeOff } from '../components/common/IconMap';
 
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { register } = useAuth();
@@ -65,16 +68,16 @@ const Register = () => {
                 transition={{ duration: 0.5 }}
             >
                 <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <motion.div 
+                    <motion.div
                         style={{ fontSize: '3rem', marginBottom: '1rem' }}
                         animate={{ scale: [1, 1.1, 1] }}
                         transition={{ duration: 2, repeat: Infinity }}
                     >
                         🎤
                     </motion.div>
-                    <h1 style={{ 
-                        fontSize: '2rem', 
-                        fontWeight: '800', 
+                    <h1 style={{
+                        fontSize: '2rem',
+                        fontWeight: '800',
                         marginBottom: '0.5rem',
                         background: 'var(--gradient-primary)',
                         WebkitBackgroundClip: 'text',
@@ -175,24 +178,46 @@ const Register = () => {
                         }}>
                             Password
                         </label>
-                        <input
-                            type="password"
-                            placeholder="At least 6 characters"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            minLength={6}
-                            style={{
-                                width: '100%',
-                                padding: '1rem',
-                                background: 'rgba(255, 255, 255, 0.1)',
-                                border: '1px solid rgba(255, 255, 255, 0.2)',
-                                borderRadius: '1rem',
-                                color: 'var(--text-primary)',
-                                fontSize: '1rem',
-                                outline: 'none'
-                            }}
-                        />
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="At least 6 characters"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                minLength={6}
+                                style={{
+                                    width: '100%',
+                                    padding: '1rem',
+                                    paddingRight: '3rem',
+                                    background: 'rgba(255, 255, 255, 0.1)',
+                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                    borderRadius: '1rem',
+                                    color: 'var(--text-primary)',
+                                    fontSize: '1rem',
+                                    outline: 'none'
+                                }}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                style={{
+                                    position: 'absolute',
+                                    right: '1rem',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    background: 'none',
+                                    border: 'none',
+                                    color: 'var(--text-secondary)',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    padding: 0
+                                }}
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
                     </div>
 
                     <div style={{ marginBottom: '2rem' }}>
@@ -204,23 +229,45 @@ const Register = () => {
                         }}>
                             Confirm Password
                         </label>
-                        <input
-                            type="password"
-                            placeholder="Confirm your password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            required
-                            style={{
-                                width: '100%',
-                                padding: '1rem',
-                                background: 'rgba(255, 255, 255, 0.1)',
-                                border: '1px solid rgba(255, 255, 255, 0.2)',
-                                borderRadius: '1rem',
-                                color: 'var(--text-primary)',
-                                fontSize: '1rem',
-                                outline: 'none'
-                            }}
-                        />
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                type={showConfirmPassword ? "text" : "password"}
+                                placeholder="Confirm your password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                                style={{
+                                    width: '100%',
+                                    padding: '1rem',
+                                    paddingRight: '3rem',
+                                    background: 'rgba(255, 255, 255, 0.1)',
+                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                    borderRadius: '1rem',
+                                    color: 'var(--text-primary)',
+                                    fontSize: '1rem',
+                                    outline: 'none'
+                                }}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                style={{
+                                    position: 'absolute',
+                                    right: '1rem',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    background: 'none',
+                                    border: 'none',
+                                    color: 'var(--text-secondary)',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    padding: 0
+                                }}
+                            >
+                                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
                     </div>
 
                     <motion.button
@@ -247,10 +294,10 @@ const Register = () => {
                 <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
                     <p style={{ color: 'var(--text-secondary)' }}>
                         Already have an account?{' '}
-                        <Link 
-                            to="/login" 
-                            style={{ 
-                                color: 'var(--primary-400)', 
+                        <Link
+                            to="/login"
+                            style={{
+                                color: 'var(--primary-400)',
                                 textDecoration: 'none',
                                 fontWeight: '600'
                             }}

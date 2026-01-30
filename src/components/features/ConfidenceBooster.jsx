@@ -90,9 +90,9 @@ const ConfidenceBooster = () => {
                     exit={{ scale: 0.8, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                     style={{
-                        margin: '0 auto var(--space-4)',
-                        width: '80px',
-                        height: '80px',
+                        margin: '0 auto var(--space-6)',
+                        width: '160px',
+                        height: '175px',
                         borderRadius: '50%',
                         background: 'var(--gradient-primary)',
                         display: 'flex',
@@ -100,7 +100,7 @@ const ConfidenceBooster = () => {
                         justifyContent: 'center'
                     }}
                 >
-                    <CurrentIcon size={40} color="white" strokeWidth={1.5} />
+                    <CurrentIcon size={64} color="white" strokeWidth={1.5} />
                 </motion.div>
             </AnimatePresence>
 
