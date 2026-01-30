@@ -33,6 +33,7 @@ const Emergency = () => {
             background: '#111827',
             color: 'white',
             padding: '2rem',
+            paddingTop: '120px', // Added top margin to avoid header overlap
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

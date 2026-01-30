@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import Card from '../components/common/Card';
 import Loading from '../components/common/Loading';
 import Modal from '../components/common/Modal';
 import AnimatedBackground from '../components/common/AnimatedBackground';
-import { storiesAPI } from '../services/api';
+import { storiesAPI, statsAPI } from '../services/api';
 import {
     Star,
     MessageCircle,
@@ -19,7 +21,8 @@ import {
     Bell,
     MessageSquare,
     Edit,
-    Check
+    Check,
+    Lock
 } from '../components/common/IconMap';
 
 const API_URL = '/api';
@@ -29,8 +32,8 @@ const Counter = ({ value, label, icon: Icon, delay = 0 }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true });
     const [count, setCount] = useState(0);
-    const target = parseInt(value.replace(/\D/g, ''));
-    const suffix = value.replace(/[0-9]/g, '');
+    const target = parseInt(value.toString().replace(/\D/g, ''));
+    const suffix = value.toString().replace(/[0-9]/g, '');
 
     useEffect(() => {
         if (isInView) {
@@ -93,10 +96,17 @@ const Counter = ({ value, label, icon: Icon, delay = 0 }) => {
 };
 
 const SuccessStories = () => {
+    const { isAuthenticated } = useAuth();
+    const navigate = useNavigate();
     const [stories, setStories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAddModal, setShowAddModal] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const [stats, setStats] = useState({
+        totalStories: 0,
+        totalLikes: 0,
+        empoweredPercentage: 98
+    });
     const [newStory, setNewStory] = useState({
         situation: '',
         whatISaid: '',
@@ -125,7 +135,23 @@ const SuccessStories = () => {
 
     useEffect(() => {
         fetchStories();
+        fetchStats();
     }, [selectedCategory]);
+
+    const fetchStats = async () => {
+        try {
+            const response = await statsAPI.getStats();
+            setStats(response.data.data);
+        } catch (error) {
+            console.error('Error fetching stats:', error);
+            // Set to zero when no data
+            setStats({
+                totalStories: 0,
+                totalLikes: 0,
+                empoweredPercentage: 0
+            });
+        }
+    };
 
     const fetchStories = async () => {
         setLoading(true);
@@ -143,32 +169,69 @@ const SuccessStories = () => {
     };
 
     const handleLike = async (storyId) => {
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
+        
         try {
-            await storiesAPI.like(storyId);
+            const response = await storiesAPI.like(storyId);
+            const { likes, hasLiked, action } = response.data.data;
+            
             setStories(stories.map(story =>
-                story._id === storyId ? { ...story, likes: story.likes + 1 } : story
+                story._id === storyId ? { 
+                    ...story, 
+                    likes: likes,
+                    hasLiked: hasLiked
+                } : story
             ));
+            
+            // Update stats based on action
+            if (action === 'liked') {
+                setStats(prev => ({ ...prev, totalLikes: prev.totalLikes + 1 }));
+            } else {
+                setStats(prev => ({ ...prev, totalLikes: Math.max(0, prev.totalLikes - 1) }));
+            }
         } catch (error) {
             console.error('Error liking story:', error);
+            if (error.response?.status === 401) {
+                navigate('/login');
+            }
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
+        
         setSubmitting(true);
 
         try {
             const response = await storiesAPI.add(newStory);
             setStories([response.data.data, ...stories]);
+            setStats(prev => ({ ...prev, totalStories: prev.totalStories + 1 }));
             setNewStory({ situation: '', whatISaid: '', outcome: '', feeling: 'proud', category: 'general' });
             setShowAddModal(false);
-            alert('Thank you for sharing your story!');
         } catch (error) {
             console.error('Error adding story:', error);
-            alert('Failed to share story. Please try again.');
+            if (error.response?.status === 401) {
+                navigate('/login');
+            }
         } finally {
             setSubmitting(false);
         }
+    };
+
+    const handleAddStoryClick = () => {
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
+        setShowAddModal(true);
     };
 
     const getFeelingEmoji = (feelingId) => {
@@ -217,7 +280,7 @@ const SuccessStories = () => {
                     <motion.button
                         className="btn btn-primary btn-lg"
                         style={{ marginTop: '2rem' }}
-                        onClick={() => setShowAddModal(true)}
+                        onClick={handleAddStoryClick}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
@@ -238,9 +301,24 @@ const SuccessStories = () => {
                     maxWidth: '1200px',
                     margin: '0 auto 4rem auto'
                 }}>
-                    <Counter value="500+" label="Stories Shared" icon={MessageCircle} delay={0} />
-                    <Counter value="12k" label="Community Likes" icon={Heart} delay={0.1} />
-                    <Counter value="98%" label="Felt Empowered" icon={TrendingUp} delay={0.2} />
+                    <Counter 
+                        value={stats.totalStories} 
+                        label="Stories Shared" 
+                        icon={MessageCircle} 
+                        delay={0} 
+                    />
+                    <Counter 
+                        value={stats.totalLikes} 
+                        label="Community Likes" 
+                        icon={Heart} 
+                        delay={0.1} 
+                    />
+                    <Counter 
+                        value={stats.empoweredPercentage > 0 ? `${stats.empoweredPercentage}%` : '0%'} 
+                        label="Felt Empowered" 
+                        icon={TrendingUp} 
+                        delay={0.2} 
+                    />
                 </div>
 
                 {/* Category Filter */}
@@ -279,7 +357,7 @@ const SuccessStories = () => {
                         <button
                             className="btn btn-primary"
                             style={{ marginTop: '1.5rem' }}
-                            onClick={() => setShowAddModal(true)}
+                            onClick={handleAddStoryClick}
                         >
                             Share Your Story
                         </button>
@@ -390,9 +468,23 @@ const SuccessStories = () => {
                                                 onClick={() => handleLike(story._id)}
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.9 }}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '0.25rem',
+                                                    background: 'none',
+                                                    border: 'none',
+                                                    cursor: 'pointer',
+                                                    color: story.hasLiked ? '#ef4444' : 'var(--text-secondary)',
+                                                    transition: 'all 0.2s ease'
+                                                }}
                                             >
-                                                <Heart size={16} fill={story.likes > 0 ? "#f87171" : "none"} />
-                                                <span>{story.likes}</span>
+                                                <Heart 
+                                                    size={16} 
+                                                    fill={story.hasLiked ? "#ef4444" : "none"} 
+                                                    color={story.hasLiked ? "#ef4444" : "var(--text-secondary)"}
+                                                />
+                                                <span>{story.likes || 0}</span>
                                             </motion.button>
                                         </div>
                                     </div>

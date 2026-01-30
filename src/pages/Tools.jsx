@@ -5,6 +5,7 @@ import ConfidenceBooster from '../components/features/ConfidenceBooster';
 import QuickPhrases from '../components/features/QuickPhrases';
 import PracticeMode from '../components/features/PracticeMode';
 import AnimatedBackground from '../components/common/AnimatedBackground';
+import { toolsAPI } from '../services/api';
 import { Wrench, Heart, Zap, Shield, Sparkles } from '../components/common/IconMap';
 
 // Animated Counter Component
@@ -12,8 +13,8 @@ const Counter = ({ value, label, icon: Icon }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true });
     const [count, setCount] = useState(0);
-    const target = parseInt(value.replace(/\D/g, ''));
-    const suffix = value.replace(/[0-9]/g, '');
+    const target = parseInt(value.toString().replace(/\D/g, ''));
+    const suffix = value.toString().replace(/[0-9]/g, '');
 
     useEffect(() => {
         if (isInView) {
@@ -72,6 +73,43 @@ const Counter = ({ value, label, icon: Icon }) => {
 };
 
 const Tools = () => {
+    const [toolsStats, setToolsStats] = useState({
+        totalPhrases: 0,
+        totalAffirmations: 0,
+        totalScripts: 0
+    });
+
+    useEffect(() => {
+        fetchToolsStats();
+    }, []);
+
+    const fetchToolsStats = async () => {
+        try {
+            const [phrasesRes, affirmationsRes, scriptsRes] = await Promise.all([
+                toolsAPI.getPhrases(),
+                toolsAPI.getAffirmations(),
+                toolsAPI.getScripts()
+            ]);
+            
+            setToolsStats({
+                totalPhrases: phrasesRes.data.count || 0,
+                totalAffirmations: affirmationsRes.data.count || 0,
+                totalScripts: scriptsRes.data.count || 0
+            });
+        } catch (error) {
+            console.error('Error fetching tools stats:', error);
+            // Use fallback stats
+            setToolsStats({
+                totalPhrases: 4,
+                totalAffirmations: 4,
+                totalScripts: 1
+            });
+        }
+    };
+
+    const totalTools = 4; // Fixed number of tool components
+    const totalPhrases = toolsStats.totalPhrases + toolsStats.totalAffirmations;
+
     return (
         <div style={{ paddingTop: '100px', minHeight: '100vh' }}>
             <AnimatedBackground />
@@ -111,8 +149,12 @@ const Tools = () => {
                     maxWidth: '1000px',
                     margin: '0 auto 4rem auto'
                 }}>
-                    <Counter value="4" label="Power Tools" icon={Wrench} />
-                    <Counter value="100+" label="Practice Phrases" icon={Sparkles} />
+                    <Counter value={totalTools} label="Power Tools" icon={Wrench} />
+                    <Counter 
+                        value={totalPhrases > 0 ? `${totalPhrases}+` : '8+'} 
+                        label="Practice Phrases" 
+                        icon={Sparkles} 
+                    />
                     <Counter value="2min" label="Calm Down Time" icon={Heart} />
                     <Counter value="100%" label="Confidence Boost" icon={Zap} />
                 </div>

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { tipsAPI } from '../services/api';
 import Card from '../components/common/Card';
 import Loading from '../components/common/Loading';
@@ -15,6 +17,8 @@ import {
 } from '../components/common/IconMap';
 
 const Tips = () => {
+    const { isAuthenticated } = useAuth();
+    const navigate = useNavigate();
     const [tips, setTips] = useState([]);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('all');
@@ -61,19 +65,38 @@ const Tips = () => {
     };
 
     const handleLike = async (tipId) => {
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
+        
         try {
-            await tipsAPI.like(tipId);
+            const response = await tipsAPI.like(tipId);
+            const { likes, hasLiked } = response.data.data;
+            
             setTips(tips.map(tip =>
-                tip._id === tipId ? { ...tip, likes: tip.likes + 1 } : tip
+                tip._id === tipId ? { 
+                    ...tip, 
+                    likes: likes,
+                    hasLiked: hasLiked
+                } : tip
             ));
         } catch (error) {
             console.error('Error liking tip:', error);
+            if (error.response?.status === 401) {
+                navigate('/login');
+            }
         }
     };
 
     const handleAddTip = async (e) => {
         e.preventDefault();
         if (!newTip.content.trim()) return;
+        
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
 
         setSubmitting(true);
         try {
@@ -81,13 +104,22 @@ const Tips = () => {
             setTips([response.data.data, ...tips]);
             setNewTip({ category: 'general', content: '' });
             setShowAddModal(false);
-            alert('Thank you for sharing your wisdom!');
         } catch (error) {
             console.error('Error adding tip:', error);
-            alert('Failed to add tip. Please try again.');
+            if (error.response?.status === 401) {
+                navigate('/login');
+            }
         } finally {
             setSubmitting(false);
         }
+    };
+
+    const handleAddTipClick = () => {
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
+        setShowAddModal(true);
     };
 
     // Map category ids to icons
@@ -119,7 +151,7 @@ const Tips = () => {
                     <motion.button
                         className="btn btn-primary"
                         style={{ marginTop: '1rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-                        onClick={() => setShowAddModal(true)}
+                        onClick={handleAddTipClick}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
@@ -173,7 +205,7 @@ const Tips = () => {
                         <motion.button
                             className="btn btn-primary"
                             style={{ marginTop: '1rem' }}
-                            onClick={() => setShowAddModal(true)}
+                            onClick={handleAddTipClick}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
@@ -196,10 +228,23 @@ const Tips = () => {
                                         onClick={() => handleLike(tip._id)}
                                         whileHover={{ scale: 1.1 }}
                                         whileTap={{ scale: 0.9 }}
-                                        style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}
+                                        style={{ 
+                                            display: 'flex', 
+                                            alignItems: 'center', 
+                                            gap: '0.25rem',
+                                            background: 'none',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            color: tip.hasLiked ? '#ef4444' : 'var(--text-secondary)',
+                                            transition: 'all 0.2s ease'
+                                        }}
                                     >
-                                        <Heart size={16} fill={tip.likes > 0 ? '#f87171' : 'none'} color="#f87171" />
-                                        {tip.likes}
+                                        <Heart 
+                                            size={16} 
+                                            fill={tip.hasLiked ? "#ef4444" : "none"} 
+                                            color={tip.hasLiked ? "#ef4444" : "var(--text-secondary)"}
+                                        />
+                                        {tip.likes || 0}
                                     </motion.button>
                                 </div>
                             </Card>
