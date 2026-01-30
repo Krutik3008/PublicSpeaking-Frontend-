@@ -1384,4 +1384,21 @@
     .auth-container button[type="submit"] {
         padding: 0.875rem !important;
     }
+
+    /* Mobile Modal Optimizations */
+    .modal-content {
+        width: 90% !important;
+        margin: 1rem !important;
+        max-height: 85vh !important;
+    }
+
+    .modal-header {
+        padding: 1rem 1.25rem !important;
+    }
+
+    .modal-title {
+        font-size: 1.25rem !important;
+        padding-right: 1rem;
+        /* Ensure space for close button */
+    }
 }

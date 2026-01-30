@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from './IconMap';
+import { X } from 'lucide-react'; // Import directly to ensure visibility
 
 const Modal = ({ isOpen, onClose, title, children }) => {
     useEffect(() => {
@@ -40,6 +40,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
                     transition={{ duration: 0.2 }}
                 >
                     <motion.div
+                        className="modal-content"
                         style={{
                             background: 'var(--bg-primary)',
                             borderRadius: '1.5rem',
@@ -58,40 +59,53 @@ const Modal = ({ isOpen, onClose, title, children }) => {
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
                     >
                         {/* Header */}
-                        <div style={{
-                            padding: '1.5rem 2rem',
-                            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            background: 'rgba(255, 255, 255, 0.02)'
-                        }}>
-                            <h2 style={{
-                                margin: 0,
-                                fontSize: '1.5rem',
-                                fontWeight: '700',
-                                color: 'var(--text-primary)'
-                            }}>
+                        <div
+                            className="modal-header"
+                            style={{
+                                padding: '1.5rem 2rem',
+                                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                background: 'rgba(255, 255, 255, 0.02)',
+                                position: 'relative' // Added for absolute positioning context
+                            }}
+                        >
+                            <h2
+                                className="modal-title"
+                                style={{
+                                    margin: 0,
+                                    fontSize: '1.5rem',
+                                    fontWeight: '700',
+                                    color: 'var(--text-primary)',
+                                    paddingRight: '3rem', // Add space for the absolute button
+                                    width: '100%'
+                                }}
+                            >
                                 {title}
                             </h2>
                             <motion.button
                                 onClick={onClose}
                                 style={{
-                                    background: 'rgba(255, 255, 255, 0.1)',
+                                    position: 'absolute',
+                                    right: '1.25rem',
+                                    top: '1.5rem',
+                                    background: 'rgba(255, 255, 255, 0.15)',
                                     border: 'none',
                                     borderRadius: '50%',
-                                    width: '40px',
-                                    height: '40px',
+                                    width: '36px',
+                                    height: '36px',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     cursor: 'pointer',
-                                    color: 'var(--text-secondary)'
+                                    color: 'white',
+                                    zIndex: 50
                                 }}
-                                whileHover={{ 
-                                    scale: 1.1, 
-                                    background: 'rgba(255, 255, 255, 0.2)',
-                                    color: 'var(--text-primary)'
+                                whileHover={{
+                                    scale: 1.1,
+                                    background: 'rgba(255, 255, 255, 0.25)',
+                                    color: 'white'
                                 }}
                                 whileTap={{ scale: 0.9 }}
                                 transition={{ type: "spring", stiffness: 400 }}
@@ -99,7 +113,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
                                 <X size={20} />
                             </motion.button>
                         </div>
-                        
+
                         {/* Content */}
                         <div style={{
                             padding: '2rem',
