@@ -72,16 +72,57 @@ const ScriptGenerator = () => {
                             onChange={(e) => setSituation(e.target.value)}
                             required
                         />
-                        <div style={{ marginTop: '0.5rem' }}>
-                            <small style={{ color: 'var(--text-muted)' }}>Quick examples:</small>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
+                        <div style={{
+                            marginTop: '1rem',
+                            padding: '1rem',
+                            background: 'rgba(99, 102, 241, 0.08)',
+                            borderRadius: '1rem',
+                            border: '1px solid rgba(99, 102, 241, 0.15)'
+                        }}>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                marginBottom: '0.75rem',
+                                color: 'var(--primary-400)',
+                                fontWeight: '600',
+                                fontSize: '0.85rem'
+                            }}>
+                                💡 Quick examples:
+                            </div>
+                            <div style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: '0.5rem'
+                            }}>
                                 {exampleSituations.map((ex, i) => (
                                     <button
                                         key={i}
                                         type="button"
-                                        className="btn btn-ghost btn-sm"
-                                        style={{ fontSize: '0.75rem' }}
                                         onClick={() => setSituation(ex)}
+                                        style={{
+                                            padding: '0.5rem 0.875rem',
+                                            fontSize: '0.8rem',
+                                            borderRadius: '2rem',
+                                            background: 'rgba(255, 255, 255, 0.06)',
+                                            border: '1px solid rgba(255, 255, 255, 0.12)',
+                                            color: 'var(--text-secondary)',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s ease',
+                                            whiteSpace: 'normal',
+                                            textAlign: 'left',
+                                            lineHeight: '1.4'
+                                        }}
+                                        onMouseOver={(e) => {
+                                            e.target.style.background = 'rgba(99, 102, 241, 0.2)';
+                                            e.target.style.borderColor = 'rgba(99, 102, 241, 0.4)';
+                                            e.target.style.color = 'white';
+                                        }}
+                                        onMouseOut={(e) => {
+                                            e.target.style.background = 'rgba(255, 255, 255, 0.06)';
+                                            e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                                            e.target.style.color = 'var(--text-secondary)';
+                                        }}
                                     >
                                         {ex}
                                     </button>

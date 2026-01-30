@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
@@ -15,33 +15,45 @@ import AnxietyCheck from './pages/AnxietyCheck';
 import Emergency from './pages/Emergency';
 import './App.css';
 
+// Layout component to conditionally render footer
+const Layout = ({ children }) => {
+    const location = useLocation();
+    const hideFooterPaths = ['/login', '/register'];
+    const shouldHideFooter = hideFooterPaths.includes(location.pathname);
+
+    return (
+        <div className="app">
+            <Navbar />
+            <main>{children}</main>
+            {!shouldHideFooter && <Footer />}
+        </div>
+    );
+};
+
 function App() {
     return (
         <AuthProvider>
             <Router>
-                <div className="app">
-                    <Navbar />
-                    <main>
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/scenarios" element={<Scenarios />} />
-                            <Route path="/scenarios/:id" element={<Scenarios />} />
-                            <Route path="/generate" element={<ScriptGenerator />} />
-                            <Route path="/tips" element={<Tips />} />
-                            <Route path="/tools" element={<Tools />} />
-                            <Route path="/stories" element={<SuccessStories />} />
-                            <Route path="/anxiety-check" element={<AnxietyCheck />} />
-                            <Route path="/emergency" element={<Emergency />} />
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/register" element={<Register />} />
-                            <Route path="/profile" element={<Profile />} />
-                        </Routes>
-                    </main>
-                    <Footer />
-                </div>
+                <Layout>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/scenarios" element={<Scenarios />} />
+                        <Route path="/scenarios/:id" element={<Scenarios />} />
+                        <Route path="/generate" element={<ScriptGenerator />} />
+                        <Route path="/tips" element={<Tips />} />
+                        <Route path="/tools" element={<Tools />} />
+                        <Route path="/stories" element={<SuccessStories />} />
+                        <Route path="/anxiety-check" element={<AnxietyCheck />} />
+                        <Route path="/emergency" element={<Emergency />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/profile" element={<Profile />} />
+                    </Routes>
+                </Layout>
             </Router>
         </AuthProvider>
     );
 }
 
 export default App;
+

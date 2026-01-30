@@ -34,18 +34,19 @@ const Login = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '2rem',
-            paddingTop: '120px',
+            padding: '1rem',
+            paddingTop: '100px',
             background: 'var(--bg-primary)'
         }}>
             <motion.div
+                className="auth-container"
                 style={{
                     background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
                     backdropFilter: 'blur(30px)',
-                    borderRadius: '2.5rem',
-                    padding: '3.5rem',
+                    borderRadius: '2rem',
+                    padding: '2.5rem',
                     width: '100%',
-                    maxWidth: '450px',
+                    maxWidth: '420px',
                     border: '1px solid rgba(255, 255, 255, 0.15)',
                     boxShadow: '0 32px 64px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)'
                 }}

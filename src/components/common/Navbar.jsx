@@ -129,21 +129,12 @@ const Navbar = () => {
                             }}>
                             {isAuthenticated ? (
                                 <>
-                                    <Link
-                                        to="/profile"
-                                        onClick={() => setIsOpen(false)}
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '0.75rem',
-                                            padding: '0.75rem 1rem',
-                                            borderRadius: '0.75rem',
-                                            background: 'rgba(255, 255, 255, 0.05)',
-                                            color: 'white',
-                                            fontWeight: '500'
-                                        }}>
-                                        <User size={20} /> Profile
-                                    </Link>
+                                    <div className="mobile-user-greeting">
+                                        <div className="user-avatar">
+                                            {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                                        </div>
+                                        <span>Hi, {user?.name?.split(' ')[0] || 'User'}</span>
+                                    </div>
                                     <button
                                         onClick={() => { logout(); setIsOpen(false); }}
                                         style={{
@@ -200,9 +191,10 @@ const Navbar = () => {
                             )}
                         </motion.div>
                     )}
+
                 </div>
 
-                <div className="navbar-actions">
+                <div className="navbar-actions desktop-only">
                     {isAuthenticated ? (
                         <>
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>

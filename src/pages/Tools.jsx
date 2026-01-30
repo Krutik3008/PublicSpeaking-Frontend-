@@ -111,7 +111,7 @@ const Tools = () => {
     const totalPhrases = toolsStats.totalPhrases + toolsStats.totalAffirmations;
 
     return (
-        <div style={{ paddingTop: '100px', minHeight: '100vh' }}>
+        <div className="tools-section" style={{ paddingTop: '100px', minHeight: '100vh' }}>
             <AnimatedBackground />
             <div className="container">
                 <motion.div

@@ -240,7 +240,7 @@ const SuccessStories = () => {
     };
 
     return (
-        <div style={{ paddingTop: '100px', paddingBottom: '4rem', minHeight: '100vh' }}>
+        <div className="stories-section" style={{ paddingTop: '100px', paddingBottom: '4rem', minHeight: '100vh' }}>
             <AnimatedBackground />
 
             <div className="container">
